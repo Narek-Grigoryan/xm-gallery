@@ -26,6 +26,12 @@ describe('ImageMapperService', () => {
     expect(service).toBeTruthy();
   });
 
+  describe('IMAGE_PATH constant', () => {
+    it('should have the correct IMAGE_PATH value', () => {
+      expect(service.IMAGE_PATH).toBe('https://picsum.photos/id');
+    });
+  });
+
   describe('mapPicsumImageToImageComponentModel', () => {
 
     it('should correctly map PicsumImageItem to ImageComponentModel', () => {
@@ -33,12 +39,38 @@ describe('ImageMapperService', () => {
 
       expect(result).toEqual({
         id: mockPicsumImageItem.id,
-        imageSrc: mockPicsumImageItem.download_url,
+        imageSrc: `${service.IMAGE_PATH}/${mockPicsumImageItem.id}/300`,
         imageAlt: mockPicsumImageItem.author,
         saved: jasmine.any(Function)
       });
 
       expect(result.saved()).toBe(false);
+    });
+
+    it('should construct correct imageSrc URL using IMAGE_PATH and image id', () => {
+      const result = service.mapPicsumImageToImageComponentModel(mockPicsumImageItem);
+
+      expect(result.imageSrc).toBe('https://picsum.photos/id/123/300');
+    });
+
+    it('should construct correct imageSrc URL for different image ids', () => {
+      const testCases = [
+        { id: '456', expected: 'https://picsum.photos/id/456/300' },
+        { id: '789', expected: 'https://picsum.photos/id/789/300' },
+        { id: '0', expected: 'https://picsum.photos/id/0/300' },
+        { id: '999', expected: 'https://picsum.photos/id/999/300' }
+      ];
+
+      testCases.forEach(testCase => {
+        const input: PicsumImageItem = {
+          ...mockPicsumImageItem,
+          id: testCase.id
+        };
+
+        const result = service.mapPicsumImageToImageComponentModel(input);
+
+        expect(result.imageSrc).toBe(testCase.expected);
+      });
     });
 
     it('should return a new instance each time', () => {
@@ -94,15 +126,47 @@ describe('ImageMapperService', () => {
       expect(result.imageAlt).toBe('José María & Co.');
     });
 
-    it('should map different URLs correctly', () => {
+    it('should handle special characters in image id', () => {
       const input: PicsumImageItem = {
         ...mockPicsumImageItem,
-        download_url: 'https://different.com/image.png'
+        id: '123-abc'
       };
 
       const result = service.mapPicsumImageToImageComponentModel(input);
 
-      expect(result.imageSrc).toBe('https://different.com/image.png');
+      expect(result.imageSrc).toBe('https://picsum.photos/id/123-abc/300');
+      expect(result.id).toBe('123-abc');
+    });
+
+    it('should map all properties correctly with different input values', () => {
+      const input: PicsumImageItem = {
+        id: '999',
+        author: 'Test Author',
+        url: 'https://test.com/image.jpg',
+        download_url: 'https://test.com/download/image.jpg',
+        width: 4000,
+        height: 3000
+      };
+
+      const result = service.mapPicsumImageToImageComponentModel(input);
+
+      expect(result.id).toBe('999');
+      expect(result.imageSrc).toBe('https://picsum.photos/id/999/300');
+      expect(result.imageAlt).toBe('Test Author');
+      expect(result.saved()).toBe(false);
+    });
+
+    it('should ignore download_url and use constructed URL instead', () => {
+      const input: PicsumImageItem = {
+        ...mockPicsumImageItem,
+        id: '555',
+        download_url: 'https://completely-different-url.com/image.jpg'
+      };
+
+      const result = service.mapPicsumImageToImageComponentModel(input);
+
+      expect(result.imageSrc).toBe('https://picsum.photos/id/555/300');
+      expect(result.imageSrc).not.toBe(input.download_url);
     });
   });
 });
