@@ -1,0 +1,18 @@
+.photos-gallery-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.photos-gallery-listing-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.error-message {
+  text-align: center;
+  color: #ba0000;
+}

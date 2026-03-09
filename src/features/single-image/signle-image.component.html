@@ -1,0 +1,8 @@
+<div class="single-image-container">
+  @if (image(); as image) {
+    <img class="single-image" [alt]="image.alt" [src]="image.url" [title]="image.title">
+    <div class="single-image-footer">
+      <button class="remove-button" (click)="onRemoveImage()" mat-button>Remove from Favourites</button>
+    </div>
+  }
+</div>

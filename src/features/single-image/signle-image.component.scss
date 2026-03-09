@@ -1,0 +1,22 @@
+.single-image-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.single-image {
+  width: 100%;
+}
+
+.remove-button {
+  background-color: #ba1919;
+  border-radius: 5px;
+  color: #ffffff;
+}
+
+.single-image-footer {
+  text-align: center;
+}
+
+

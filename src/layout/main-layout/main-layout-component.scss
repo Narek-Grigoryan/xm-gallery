@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  gap: 100px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  .header-link-button {
+    background-color: #0874e1;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #ffffff;
+
+    &.active {
+      background-color: #013d76;
+      text-decoration: underline;
+    }
+  }
+}
+
+.main-content {
+  padding: 20px;
+}
+
+

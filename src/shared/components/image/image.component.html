@@ -1,0 +1,6 @@
+<div class="container">
+  <div class="image" appRecycle (imageClick)="onImageClick()" [alt]="image().imageAlt" [id]="image().id" [src]="image().imageSrc" ></div>
+  @if (hasSavedMode() && image().saved()) {
+    <div class="overlay"></div>
+  }
+</div>

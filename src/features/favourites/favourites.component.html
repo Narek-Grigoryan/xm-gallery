@@ -1,0 +1,14 @@
+<div class="favourites-container">
+  <div class="favourites-list-container">
+    @for (image of savedImages(); track image.id) {
+      <app-image
+        [hasSavedMode]="false"
+        (imageClick)="onImageClick(image.id)"
+        [image]="image"
+      />
+    }
+  </div>
+  @if (savedItemsCount() === 0) {
+    <p>No saved items</p>
+  }
+</div>
